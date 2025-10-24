@@ -1,0 +1,143 @@
+#{extends 'main.html' /}
+#{set title:'Detalhamento do Cliente' /}
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-pink p-4 mb-4">
+            <div class="text-center mb-4">
+                <div style="width: 80px; height: 80px; background: var(--pink-gradient); 
+                            border-radius: 50%; display: inline-flex; align-items: center; 
+                            justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
+                    ${cliente.nomeCompleto?.charAt(0)?.toUpperCase()}
+                </div>
+                <h3 style="color: var(--pink-primary); margin-top: 15px;">
+                    Detalhes do Cliente
+                </h3>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="info-card">
+                        <strong style="color: var(--pink-dark);">👤 Nome:</strong>
+                        <p>${cliente.nomeCompleto}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="info-card">
+                        <strong style="color: var(--pink-dark);">📧 Email:</strong>
+                        <p class="mt-1">${cliente.email}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="info-card">
+                        <strong style="color: var(--pink-dark);">📱 Telefone:</strong>
+                        <p class="mt-1">${cliente.telefone}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="info-card">
+                        <strong style="color: var(--pink-dark);">📊 Status:</strong>
+                        <p class="mt-1">
+                            <span class="badge badge-ativo">Ativo</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr style="border-color: var(--pink-medium);">
+            
+            <div class="text-center mb-4">
+                <a href="@{Consultas.form(cliente.id)}" class="btn btn-pink btn-lg">
+                    📅 Agendar Nova Consulta
+                </a>
+                <a href="@{Clientes.editar(cliente.id)}" class="btn btn-outline-pink btn-lg">
+                    ✏️ Editar Cliente
+                </a>
+            </div>
+            
+            <div class="consultas-section">
+                <h5 style="color: var(--pink-primary); margin-bottom: 20px;">
+                    📅 Consultas Agendadas:
+                </h5>
+                
+                #{if cliente.consultas?.size() > 0}
+                    <ul class="consultas-list">
+                        #{list items:cliente.consultas, as:'consult'}
+                            <li class="consulta-item">
+                                <div class="consulta-icon">📅</div>
+                                <div class="consulta-info">
+                                    <strong>${consult.dataConsulta?.format('dd/MM/yyyy')}</strong>
+                                    <small class="text-muted d-block">
+                                        ${consult.dataConsulta?.format('EEEE')}
+                                    </small>
+                                </div>
+                            </li>
+                        #{/list}
+                    </ul>
+                #{/if}
+                #{else}
+                    <div class="no-consultas">
+                        <div style="opacity: 0.6; text-align: center; padding: 30px;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">📋</div>
+                            <p>Nenhuma consulta agendada ainda.</p>
+                            <a href="@{Consultas.form(cliente.id)}" class="btn btn-pink">
+                                Agendar Primeira Consulta
+                            </a>
+                        </div>
+                    </div>
+                #{/else}
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="@{Clientes.listar}" class="btn btn-secondary">
+                    ⬅️ Voltar à Lista
+                </a>
+                <a href="@{Application.index}" class="btn btn-outline-pink">
+                    🏠 Página Inicial
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .info-card {
+        background: rgba(233, 30, 99, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid var(--pink-primary);
+    }
+    
+    .consultas-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .consulta-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .consulta-item:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateX(5px);
+    }
+    
+    .consulta-icon {
+        font-size: 1.5rem;
+        margin-right: 15px;
+        color: var(--pink-primary);
+    }
+    
+    .no-consultas {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        border: 2px dashed var(--pink-medium);
+    }
+</style>

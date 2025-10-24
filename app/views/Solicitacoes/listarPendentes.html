@@ -1,0 +1,177 @@
+#{extends 'main.html' /}
+#{set title:'Solicitações de Acesso Pendentes' /}
+
+<style>
+    .solicitacao-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease;
+    }
+
+    .solicitacao-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .solicitacao-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--pink-light);
+    }
+
+    .user-avatar-big {
+        width: 60px;
+        height: 60px;
+        background: var(--pink-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        margin-right: 20px;
+    }
+
+    .solicitacao-info {
+        flex: 1;
+    }
+
+    .solicitacao-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .tipo-acesso-selector {
+        background: var(--pink-light);
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 15px;
+    }
+
+    .badge-pendente {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div style="background: rgba(255, 255, 255, 0.9); border-radius: 15px; padding: 20px;">
+            <h3 style="color: var(--pink-primary); margin: 0;">
+                &#128276; Solicitacoes de Acesso Pendentes
+            </h3>
+        </div>
+    </div>
+</div>
+
+#{if solicitacoes?.size() > 0}
+    <div class="row">
+        <div class="col-12">
+            <p class="text-muted mb-4">
+                &#128202; ${solicitacoes.size()} solicitacao(oes) aguardando sua aprovacao
+            </p>
+        </div>
+    </div>
+
+    #{list items: solicitacoes, as:'sol'}
+        <div class="solicitacao-card">
+            <div class="solicitacao-header">
+                <div class="user-avatar-big">
+                    ${sol.usuario.nomeCompleto?.charAt(0)?.toUpperCase()}
+                </div>
+                <div class="solicitacao-info">
+                    <h5 style="color: var(--pink-dark); margin-bottom: 5px;">
+                        ${sol.usuario.nomeCompleto}
+                    </h5>
+                    <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                        &#128100; Login: <strong>${sol.usuario.login}</strong> &bull;
+                        &#128231; ${sol.usuario.email}
+                    </p>
+                </div>
+                <span class="badge-pendente">PENDENTE</span>
+            </div>
+
+            <div class="solicitacao-details" style="margin-bottom: 20px;">
+                <p style="color: #666; margin: 0;">
+                    &#128197; Data da solicitacao: ${sol.dataSolicitacao.format('dd/MM/yyyy HH:mm')}
+                </p>
+            </div>
+
+            <form action="@{Solicitacoes.aprovar(sol.id)}" method="post">
+                <div class="tipo-acesso-selector">
+                    <label style="color: var(--pink-dark); font-weight: 500; margin-bottom: 10px; display: block;">
+                        &#127919; Selecione o tipo de acesso:
+                    </label>
+                    
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" 
+                               name="tipoAcesso" id="permanente${sol.id}" 
+                               value="PERMANENTE" checked>
+                        <label class="form-check-label" for="permanente${sol.id}">
+                            <strong>&#10004; Acesso Permanente</strong> - O usuario podera fazer login sempre que quiser
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" 
+                               name="tipoAcesso" id="unico${sol.id}" 
+                               value="UNICO">
+                        <label class="form-check-label" for="unico${sol.id}">
+                            <strong>&#128274; Acesso Unico</strong> - O usuario podera fazer login apenas uma vez
+                        </label>
+                    </div>
+                </div>
+
+                <div class="solicitacao-actions">
+                    <button type="submit" class="btn btn-pink" style="flex: 1;">
+                        &#10004; Aprovar Acesso
+                    </button>
+                    <a href="@{Solicitacoes.rejeitar(sol.id)}" 
+                       class="btn btn-danger" 
+                       style="flex: 1;"
+                       onclick="return confirm('Tem certeza que deseja rejeitar esta solicitacao?')">
+                        &#10060; Rejeitar
+                    </a>
+                </div>
+            </form>
+        </div>
+    #{/list}
+
+    <div class="text-center mt-4">
+        <a href="@{Solicitacoes.listarTodas}" class="btn btn-outline-pink">
+            &#128203; Ver Historico Completo
+        </a>
+        <a href="@{Application.index}" class="btn btn-outline-pink">
+            &#127968; Voltar ao Inicio
+        </a>
+    </div>
+
+#{/if}
+#{else}
+    <div class="text-center py-5">
+        <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 50px; box-shadow: var(--shadow);">
+            <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.6;">&#10004;</div>
+            <h5>Nenhuma solicitacao pendente</h5>
+            <p class="text-muted">
+                Todas as solicitacoes foram respondidas!
+            </p>
+            <div class="mt-4">
+                <a href="@{Solicitacoes.listarTodas}" class="btn btn-outline-pink">
+                    &#128203; Ver Historico Completo
+                </a>
+                <a href="@{Application.index}" class="btn btn-pink">
+                    &#127968; Voltar ao Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+#{/else}

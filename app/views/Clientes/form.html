@@ -1,0 +1,80 @@
+#{extends 'main.html' /}
+#{set title:'Cadastro de Cliente' /}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card card-pink p-4 mb-4">
+            <h3 style="color: var(--pink-primary); text-align: center; margin-bottom: 30px;">
+                #{if cliente?.id != null}
+                    ✏️ Editar Cliente
+                #{/if}
+                #{else}
+                    ➕ Cadastro de Cliente
+                #{/else}
+            </h3>
+            
+            <form action="@{Clientes.salvar}" method="post">
+                <input type="hidden" name="cliente.id" value="${cliente?.id}" />
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>👤 Nome Completo:</strong>
+                    </label>
+                    <input type="text" name="cliente.nomeCompleto" 
+                           value="${cliente?.nomeCompleto}" 
+                           class="form-control form-control-pink" 
+                           placeholder="Digite o nome completo do paciente"
+                           required />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>📱 Telefone:</strong>
+                    </label>
+                    <input type="text" name="cliente.telefone" 
+                           value="${cliente?.telefone}" 
+                           class="form-control form-control-pink" 
+                           placeholder="(00) 00000-0000"
+                           required />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>📧 Email:</strong>
+                    </label>
+                    <input type="email" name="cliente.email" 
+                           value="${cliente?.email}" 
+                           class="form-control form-control-pink" 
+                           placeholder="exemplo@email.com"
+                           required />
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-pink btn-lg">
+                        #{if cliente?.id != null}
+                            ✅ Salvar Alterações
+                        #{/if}
+                        #{else}
+                            ➕ Cadastrar Cliente
+                        #{/else}
+                    </button>
+                    <a href="@{Clientes.listar}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        #{if cliente?.id != null}
+            <div class="card card-pink p-3 text-center">
+                <h6 style="color: var(--pink-primary);">Ações Rápidas</h6>
+                <a href="@{Clientes.detalhar(cliente.id)}" class="btn btn-outline-pink btn-sm me-2">
+                    👁️ Ver Detalhes
+                </a>
+                <a href="@{Consultas.form(cliente.id)}" class="btn btn-pink btn-sm">
+                    📅 Agendar Consulta
+                </a>
+            </div>
+        #{/if}
+    </div>
+</div>

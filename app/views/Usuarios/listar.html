@@ -1,0 +1,151 @@
+#{extends 'main.html' /}
+#{set title:'Gerenciamento de Usuários' /}
+
+<div class="search-section">
+    <h3 style="color: var(--pink-primary); margin-bottom: 20px;">
+        👥 Usuários do Sistema
+    </h3>
+</div>
+
+<div class="table-container">
+    #{if usuarios?.size() > 0}
+        <div class="row mb-3">
+            <div class="col-12">
+                <small class="text-muted">
+                    📊 Total de ${usuarios.size()} usuário(s) ativo(s)
+                </small>
+            </div>
+        </div>
+        
+        <ul class="list-group">
+            #{list items: usuarios, as:'u'}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="user-info">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar me-3">
+                                <div style="width: 45px; height: 45px; background: var(--pink-gradient); 
+                                            border-radius: 50%; display: flex; align-items: center; 
+                                            justify-content: center; color: white; font-weight: bold;">
+                                    ${u.nomeCompleto?.charAt(0)?.toUpperCase()}
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: var(--pink-dark);">${u.nomeCompleto}</strong>
+                                <span class="badge badge-perfil-${u.perfil} ms-2">${u.perfil}</span>
+                            </div>
+                        </div>
+                        <div class="user-details">
+                            <small class="text-muted">
+                                👤 Login: ${u.login} • 📧 ${u.email}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="user-actions">
+                        <a href="@{Usuarios.editar(u.id)}" 
+                           class="btn btn-outline-pink btn-sm" 
+                           title="Editar usuário">
+                            ✏️ Editar
+                        </a>
+                        <a href="@{Usuarios.remover(u.id)}" 
+                           class="btn btn-danger btn-sm" 
+                           title="Remover usuário"
+                           onclick="return confirm('Tem certeza que deseja remover este usuário?')">
+                            🗑️ Remover
+                        </a>
+                    </div>
+                </li>
+            #{/list}
+        </ul>
+    #{/if}
+    #{else}
+        <div class="text-center py-5">
+            <div style="opacity: 0.6;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">👥</div>
+                <h5>Nenhum usuário cadastrado</h5>
+                <p class="text-muted">
+                    Cadastre o primeiro usuário do sistema!
+                    <br>
+                    <a href="@{Usuarios.form}" class="btn btn-pink mt-2">
+                        ➕ Cadastrar Primeiro Usuário
+                    </a>
+                </p>
+            </div>
+        </div>
+    #{/else}
+    
+    <div class="mt-4 text-center">
+        <a href="@{Usuarios.form}" class="btn btn-pink">
+            ➕ Novo Usuário
+        </a>
+        <a href="@{Application.index}" class="btn btn-outline-pink">
+            🏠 Voltar ao Início
+        </a>
+    </div>
+</div>
+
+<style>
+    .search-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1);
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .badge-perfil-ADMINISTRADOR {
+        background: linear-gradient(135deg, #e91e63, #ad1457);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+    }
+    
+    .badge-perfil-FUNCIONARIO {
+        background: linear-gradient(135deg, #2196f3, #1976d2);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.75rem;
+    }
+
+    .user-info {
+        flex: 1;
+    }
+    
+    .user-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .user-actions .btn {
+        white-space: nowrap;
+    }
+    
+    @media (max-width: 768px) {
+        .list-group-item {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        
+        .user-actions {
+            margin-top: 15px;
+            width: 100%;
+            justify-content: flex-start;
+        }
+        
+        .user-actions .btn {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+    }
+</style>

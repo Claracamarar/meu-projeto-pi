@@ -1,0 +1,186 @@
+#{extends 'main.html' /}
+#{set title:'Listagem de Clientes' /}
+
+<div class="search-section">
+    <h3 style="color: var(--pink-primary); margin-bottom: 20px;">
+        👥 Clientes Cadastrados
+    </h3>
+    
+    <form action="@{Clientes.listar}" method="get" class="row mb-3">
+        <div class="col-md-8">
+            <input type="text" name="termo" value="${termo}" 
+                   class="form-control form-control-pink" 
+                   placeholder="🔍 Buscar por nome ou email">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-pink">
+                🔍 Buscar
+            </button>
+            <a href="@{Clientes.form}" class="btn btn-pink">
+                ➕ Novo Cliente
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="table-container">
+    #{if clientes?.size() > 0}
+        <div class="row mb-3">
+            <div class="col-12">
+                <small class="text-muted">
+                    📊 Total de ${clientes.size()} cliente(s) encontrado(s)
+                    #{if termo}
+                        para "${termo}"
+                    #{/if}
+                </small>
+            </div>
+        </div>
+    #{/if}
+
+    <ul class="list-group">
+        #{list items: clientes, as:'c'}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="client-info">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="client-avatar me-3">
+                            <div style="width: 45px; height: 45px; background: var(--pink-gradient); 
+                                        border-radius: 50%; display: flex; align-items: center; 
+                                        justify-content: center; color: white; font-weight: bold;">
+                                ${c.nomeCompleto?.charAt(0)?.toUpperCase()}
+                            </div>
+                        </div>
+                        <div>
+                            <strong style="color: var(--pink-dark);">${c.nomeCompleto}</strong>
+                            <span class="badge badge-ativo ms-2">Ativo</span>
+                        </div>
+                    </div>
+                    <div class="client-details">
+                        <small class="text-muted">
+                            📧 ${c.email} • 📱 ${c.telefone}
+                            #{if c.consultas?.size() > 0}
+                                • 📅 ${c.consultas.size()} consulta(s) agendada(s)
+                            #{/if}
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="client-actions">
+                    <a href="@{Clientes.detalhar(c.id)}" 
+                       class="btn btn-outline-pink btn-sm" 
+                       title="Ver detalhes">
+                        👁️ Detalhes
+                    </a>
+                    <a href="@{Clientes.editar(c.id)}" 
+                       class="btn btn-outline-pink btn-sm" 
+                       title="Editar cliente">
+                        ✏️ Editar
+                    </a>
+                    <a href="@{Consultas.form(c.id)}" 
+                       class="btn btn-pink btn-sm" 
+                       title="Agendar consulta">
+                        📅 Consulta
+                    </a>
+                    <a href="@{Clientes.remover(c.id)}" 
+                       class="btn btn-danger btn-sm" 
+                       title="Remover cliente"
+                       onclick="return confirm('Tem certeza que deseja remover este cliente?')">
+                        🗑️ Remover
+                    </a>
+                </div>
+            </li>
+        #{/list}
+        #{else}
+            <li class="list-group-item text-center py-5">
+                <div style="opacity: 0.6;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">😔</div>
+                    <h5>Nenhum cliente encontrado</h5>
+                    <p class="text-muted">
+                        #{if termo}
+                            Não encontramos clientes com o termo "${termo}".
+                            <br>
+                            <a href="@{Clientes.listar}" class="btn btn-outline-pink btn-sm mt-2">
+                                Ver todos os clientes
+                            </a>
+                        #{/if}
+                        #{else}
+                            Que tal cadastrar o primeiro cliente?
+                            <br>
+                            <a href="@{Clientes.form}" class="btn btn-pink mt-2">
+                                ➕ Cadastrar Primeiro Cliente
+                            </a>
+                        #{/else}
+                    </p>
+                </div>
+            </li>
+        #{/else}
+    </ul>
+    
+    #{if clientes?.size() > 0}
+        <div class="mt-4 text-center">
+            <a href="@{Clientes.form}" class="btn btn-pink">
+                ➕ Cadastrar Novo Cliente
+            </a>
+            <a href="@{Application.index}" class="btn btn-outline-pink">
+                🏠 Voltar ao Início
+            </a>
+        </div>
+    #{/if}
+</div>
+
+<style>
+    .search-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1);
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .badge-ativo {
+        background: var(--pink-gradient);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+
+    .client-info {
+        flex: 1;
+    }
+    
+    .client-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .client-actions .btn {
+        white-space: nowrap;
+    }
+    
+    @media (max-width: 768px) {
+        .list-group-item {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        
+        .client-actions {
+            margin-top: 15px;
+            width: 100%;
+            justify-content: flex-start;
+        }
+        
+        .client-actions .btn {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+    }
+</style>

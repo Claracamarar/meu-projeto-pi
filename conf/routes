@@ -1,0 +1,44 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                       Application.index
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
+# Clientes
+GET     /Clientes/form                    controllers.Clientes.form()
+GET     /Clientes/listar                  controllers.Clientes.listar(termo:String)
+GET     /Clientes/editar/:id              controllers.Clientes.editar(id:Long)
+POST    /Clientes/salvar                  controllers.Clientes.salvar(cliente:models.Cliente)
+GET     /Clientes/detalhar/:cliente       controllers.Clientes.detalhar(cliente:models.Cliente)
+GET     /Clientes/remover/:id             controllers.Clientes.remover(id:Long)
+
+# Consultas
+GET     /Consultas/form/:clienteId        controllers.Consultas.form(clienteId:Long)
+POST    /Consultas/salvar                 controllers.Consultas.salvar(clienteId:Long, dataConsulta:Date)
+
+# Login
+GET     /                               Logins.form
+GET     /login                          Logins.form
+POST    /login                          Logins.logar
+GET     /logout                         Logins.logout
+
+# Sistema (protegido)
+GET     /painel                         Application.index
+GET     /clientes                       Clientes.listar
+GET     /clientes/novo                  Clientes.form
+POST    /clientes/salvar                Clientes.salvar
+GET     /clientes/{id}                  Clientes.detalhar
+GET     /clientes/{id}/editar           Clientes.editar
+GET     /clientes/{id}/remover          Clientes.remover
+GET     /consultas                      Consultas.listar
+GET     /consultas/nova/{clienteId}     Consultas.form
+POST    /consultas/salvar               Consultas.salvar

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Clínica Dermatológica</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" media="screen" href="@{'/public/bootstrap-5.3.6/css/bootstrap.min.css'}">
+    <style>
+        :root {
+            --pink-primary: #e91e63;
+            --pink-light: #fce4ec;
+            --pink-medium: #f8bbd9;
+            --pink-dark: #ad1457;
+            --pink-gradient: linear-gradient(135deg, #f8bbd9, #e91e63);
+            --shadow: 0 8px 25px rgba(233, 30, 99, 0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #e1bee7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--pink-gradient);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-title {
+            color: var(--pink-primary);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .form-control-pink {
+            border: 2px solid var(--pink-medium);
+            border-radius: 15px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-pink:focus {
+            border-color: var(--pink-primary);
+            box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25);
+        }
+
+        .btn-pink {
+            background: var(--pink-gradient);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            font-size: 1.1rem;
+        }
+
+        .btn-pink:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            color: white;
+        }
+
+        .btn-outline-pink {
+            border: 2px solid var(--pink-primary);
+            color: var(--pink-primary);
+            background: white;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-outline-pink:hover {
+            background: var(--pink-primary);
+            color: white;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            border: 1px solid #f8bbd9;
+            color: #c62828;
+            border-radius: 15px;
+            padding: 12px 15px;
+        }
+
+        .alert-success {
+            background: var(--pink-light);
+            border: 1px solid var(--pink-medium);
+            color: var(--pink-dark);
+            border-radius: 15px;
+            padding: 12px 15px;
+        }
+
+        .form-label {
+            color: var(--pink-dark);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: var(--pink-medium);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">🌸</div>
+                <h2 class="login-title">Clínica Dermatológica</h2>
+                <p class="login-subtitle">Faça login para acessar o sistema</p>
+            </div>
+
+            #{if flash.error}
+                <div class="alert alert-error alert-dismissible fade show" role="alert">
+                    ${flash.error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            #{/if}
+
+            #{if flash.success}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    ${flash.success}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            #{/if}
+
+            <form action="@{Logins.logar}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">🔐 Login:</label>
+                    <input type="text" name="login" 
+                           class="form-control form-control-pink" 
+                           placeholder="Digite seu login"
+                           required 
+                           autofocus />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">🔒 Senha:</label>
+                    <input type="password" name="senha" 
+                           class="form-control form-control-pink" 
+                           placeholder="Digite sua senha"
+                           required />
+                </div>
+
+                <button type="submit" class="btn btn-pink">
+                    ✅ Entrar no Sistema
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>Ainda não tem conta?</span>
+            </div>
+
+            <a href="@{Logins.cadastro}" class="btn-outline-pink">
+                ➕ Criar Nova Conta
+            </a>
+        </div>
+    </div>
+
+    <script src="@{'/public/bootstrap-5.3.6/js/bootstrap.min.js'}"></script>
+</body>
+</html>

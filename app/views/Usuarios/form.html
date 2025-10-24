@@ -1,0 +1,109 @@
+#{extends 'main.html' /}
+#{set title:'Cadastro de Usuário' /}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card card-pink p-4 mb-4">
+            <h3 style="color: var(--pink-primary); text-align: center; margin-bottom: 30px;">
+                #{if usuario?.id != null}
+                    ✏️ Editar Usuário
+                #{/if}
+                #{else}
+                    ➕ Cadastro de Usuário
+                #{/else}
+            </h3>
+            
+            <form action="@{Usuarios.salvar}" method="post">
+                <input type="hidden" name="usuario.id" value="${usuario?.id}" />
+                <input type="hidden" name="usuario.status" value="${usuario?.status ?: 'ATIVO'}" />
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>👤 Nome Completo:</strong>
+                    </label>
+                    <input type="text" name="usuario.nomeCompleto" 
+                           value="${usuario?.nomeCompleto}" 
+                           class="form-control form-control-pink" 
+                           placeholder="Digite o nome completo"
+                           required />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>📧 Email:</strong>
+                    </label>
+                    <input type="email" name="usuario.email" 
+                           value="${usuario?.email}" 
+                           class="form-control form-control-pink" 
+                           placeholder="exemplo@email.com"
+                           required />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>🔑 Login:</strong>
+                    </label>
+                    <input type="text" name="usuario.login" 
+                           value="${usuario?.login}" 
+                           class="form-control form-control-pink" 
+                           placeholder="Login para acesso ao sistema"
+                           required />
+                    <small class="text-muted">Login único no sistema</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>🔒 Senha:</strong>
+                    </label>
+                    <input type="password" name="usuario.senha" 
+                           value="${usuario?.senha}" 
+                           class="form-control form-control-pink" 
+                           placeholder="Digite uma senha segura"
+                           required />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>👔 Perfil de Acesso:</strong>
+                    </label>
+                    <select name="usuario.perfil" class="form-control form-control-pink" required>
+                        <option value="">Selecione o perfil...</option>
+                        #{list items:perfis, as:'p'}
+                            <option value="${p}" ${usuario?.perfil == p ? 'selected' : ''}>
+                                ${p}
+                            </option>
+                        #{/list}
+                    </select>
+                    <small class="text-muted">
+                        <strong>ADMINISTRADOR:</strong> Acesso total ao sistema<br>
+                        <strong>FUNCIONARIO:</strong> Pode cadastrar e gerenciar clientes
+                    </small>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-pink btn-lg">
+                        #{if usuario?.id != null}
+                            ✅ Salvar Alterações
+                        #{/if}
+                        #{else}
+                            ➕ Cadastrar Usuário
+                        #{/else}
+                    </button>
+                    <a href="@{Usuarios.listar}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card card-pink p-3">
+            <h6 style="color: var(--pink-primary); text-align: center; margin-bottom: 15px;">
+                💡 Informações sobre Perfis
+            </h6>
+            <ul style="font-size: 0.9rem; color: #666; margin-bottom: 0;">
+                <li><strong>ADMINISTRADOR:</strong> Acesso completo - gerencia usuários, clientes, consultas e aprovações</li>
+                <li><strong>FUNCIONARIO:</strong> Pode cadastrar e gerenciar clientes, mas não tem acesso administrativo</li>
+            </ul>
+        </div>
+    </div>
+</div>

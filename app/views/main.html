@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>#{get 'title' /}</title>
+    <meta charset="${_response_encoding}">
+    <link rel="stylesheet" media="screen" href="@{'/public/bootstrap-5.3.6/css/bootstrap.min.css'}">
+    <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+    <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+    <style>
+        :root {
+            --pink-primary: #e91e63;
+            --pink-light: #fce4ec;
+            --pink-medium: #f8bbd9;
+            --pink-dark: #ad1457;
+            --pink-gradient: linear-gradient(135deg, #f8bbd9, #e91e63);
+            --shadow: 0 8px 25px rgba(233, 30, 99, 0.15);
+        }
+
+        body {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #e1bee7 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 80px;
+        }
+
+        .navbar-pink {
+            background: var(--pink-gradient) !important;
+            box-shadow: var(--shadow);
+        }
+
+        .navbar-pink .navbar-brand,
+        .navbar-pink .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        .navbar-pink .nav-link:hover {
+            color: var(--pink-light) !important;
+        }
+
+        .card-pink {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .card-pink:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-pink {
+            background: var(--pink-gradient);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            margin-right: 10px;
+        }
+
+        .btn-pink:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            color: white;
+        }
+
+        .btn-outline-pink {
+            border: 2px solid var(--pink-primary);
+            color: var(--pink-primary);
+            background: transparent;
+            border-radius: 25px;
+            padding: 8px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-pink:hover {
+            background: var(--pink-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .form-control-pink {
+            border: 2px solid var(--pink-medium);
+            border-radius: 15px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-pink:focus {
+            border-color: var(--pink-primary);
+            box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25);
+        }
+
+        .list-group-item {
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateX(5px);
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .alert-success {
+            background: var(--pink-light);
+            border: 1px solid var(--pink-medium);
+            color: var(--pink-dark);
+            border-radius: 15px;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            border: 1px solid #f8bbd9;
+            color: #c62828;
+            border-radius: 15px;
+        }
+
+        .footer {
+            background: var(--pink-dark);
+            color: white;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+
+        .dropdown-menu {
+            border-radius: 15px;
+            border: none;
+            box-shadow: var(--shadow);
+            min-width: 250px;
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            margin: 5px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--pink-light);
+            color: var(--pink-dark);
+            transform: translateX(5px);
+        }
+        
+        .dropdown-item i {
+            margin-right: 8px;
+        }
+        
+        .badge-admin {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        .badge-funcionario {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        .badge-notification {
+            background: #ff5722;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .dropdown-item-trocar-conta {
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(173, 20, 87, 0.1));
+            border: 1px solid var(--pink-medium);
+            font-weight: 500;
+            color: var(--pink-dark);
+        }
+
+        .dropdown-item-trocar-conta:hover {
+            background: var(--pink-primary);
+            color: white !important;
+            border-color: var(--pink-primary);
+        }
+
+        .dropdown-divider {
+            border-color: var(--pink-medium);
+            margin: 10px 0;
+        }
+
+        .user-info-dropdown {
+            padding: 12px 15px;
+            background: var(--pink-light);
+            border-radius: 10px;
+            margin: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-pink fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="@{Application.index()}">
+                <strong>🌸 Clínica Dermatológica</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@{Application.index()}">Início</a>
+                    </li>
+                    
+                    <!-- Menu para ADMINISTRADOR - Acesso Total -->
+                    #{if session.get("perfilUsuario") == "ADMINISTRADOR"}
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{Clientes.listar()}">Clientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{Clientes.form()}">Novo Cliente</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{Consultas.listar()}">Consultas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{Usuarios.listar()}">
+                                👥 Usuários
+                            </a>
+                        </li>
+                        <li class="nav-item" style="position: relative;">
+                            <a class="nav-link" href="@{Solicitacoes.listarPendentes()}">
+                                🔔 Solicitações
+                                #{set pendentes = models.SolicitacaoAcesso.count("status = ?1", models.StatusSolicitacao.PENDENTE) /}
+                                #{if pendentes > 0}
+                                    <span class="badge-notification">${pendentes}</span>
+                                #{/if}
+                            </a>
+                        </li>
+                    #{/if}
+                    
+                    <!-- Menu para FUNCIONARIO - Acesso Limitado -->
+                    #{if session.get("perfilUsuario") == "FUNCIONARIO"}
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{Clientes.listar()}">
+                                👥 Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@{Clientes.form()}">
+                                ➕ Novo Cliente
+                            </a>
+                        </li>
+                    #{/if}
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 ${session.get("nomeUsuario") ?: session.get("usuarioLogado")}
+                            #{if session.get("perfilUsuario") == "ADMINISTRADOR"}
+                                <span class="badge-admin">ADMIN</span>
+                            #{/if}
+                            #{if session.get("perfilUsuario") == "FUNCIONARIO"}
+                                <span class="badge-funcionario">FUNCIONÁRIO</span>
+                            #{/if}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <div class="user-info-dropdown">
+                                    <div style="font-size: 0.9rem; color: var(--pink-dark);">
+                                        <strong>👤 ${session.get("nomeUsuario") ?: session.get("usuarioLogado")}</strong>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                                        Perfil: <strong>${session.get("perfilUsuario")}</strong>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item dropdown-item-trocar-conta" href="@{Logins.logout()}">
+                                    🔄 Trocar de Conta
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@{Logins.logout()}">
+                                    🚪 Sair do Sistema
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        #{if flash.success}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                ${flash.success}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        #{/if}
+        
+        #{if flash.error}
+            <div class="alert alert-error alert-dismissible fade show" role="alert">
+                ${flash.error}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        #{/if}
+
+        #{doLayout /}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🌸 Clínica Dermatológica</h5>
+                    <p>Cuidando da sua pele com excelência e dedicação.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Sistema de Gestão de Consultas</p>
+                    <p>© 2025 - Todos os direitos reservados</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts na ordem correta: jQuery primeiro, depois Bootstrap -->
+    <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    <script src="@{'/public/bootstrap-5.3.6/js/bootstrap.bundle.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+    
+    <script>
+        // Força inicialização dos dropdowns do Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        });
+    </script>
+    
+    #{get 'moreScripts' /}
+</body>
+</html>

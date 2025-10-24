@@ -1,0 +1,174 @@
+#{extends 'main.html' /}
+#{set title:'Histórico de Solicitações' /}
+
+<style>
+    .historico-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease;
+    }
+
+    .historico-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .badge-aprovado {
+        background: linear-gradient(135deg, #66bb6a, #43a047);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+
+    .badge-rejeitado {
+        background: linear-gradient(135deg, #ef5350, #c62828);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+
+    .badge-pendente {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+
+    .badge-permanente {
+        background: #2196f3;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+
+    .badge-unico {
+        background: #ff9800;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 10px;
+        font-size: 0.75rem;
+    }
+
+    .user-avatar-small {
+        width: 40px;
+        height: 40px;
+        background: var(--pink-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div style="background: rgba(255, 255, 255, 0.9); border-radius: 15px; padding: 20px;">
+            <h3 style="color: var(--pink-primary); margin: 0;">
+                &#128203; Historico de Solicitacoes
+            </h3>
+        </div>
+    </div>
+</div>
+
+#{if solicitacoes?.size() > 0}
+    <div class="row mb-3">
+        <div class="col-12">
+            <small class="text-muted">
+                &#128202; Total de ${solicitacoes.size()} solicitacao(oes) registrada(s)
+            </small>
+        </div>
+    </div>
+
+    #{list items: solicitacoes, as:'sol'}
+        <div class="historico-card">
+            <div class="d-flex align-items-start">
+                <div class="user-avatar-small">
+                    ${sol.usuario.nomeCompleto?.charAt(0)?.toUpperCase()}
+                </div>
+                
+                <div style="flex: 1;">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 style="color: var(--pink-dark); margin-bottom: 5px;">
+                                ${sol.usuario.nomeCompleto}
+                            </h6>
+                            <small class="text-muted">
+                                &#128100; ${sol.usuario.login} &bull; &#128231; ${sol.usuario.email}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            #{if sol.status.toString() == "APROVADO"}
+                                <span class="badge-aprovado">&#10004; APROVADO</span>
+                                #{if sol.tipoAcesso != null}
+                                    <br>
+                                    #{if sol.tipoAcesso.toString() == "PERMANENTE"}
+                                        <span class="badge-permanente mt-1">&#128275; PERMANENTE</span>
+                                    #{/if}
+                                    #{if sol.tipoAcesso.toString() == "UNICO"}
+                                        <span class="badge-unico mt-1">&#128274; UNICO</span>
+                                        #{if sol.acessoUtilizado}
+                                            <small style="display: block; color: #666; margin-top: 3px;">
+                                                (Ja utilizado)
+                                            </small>
+                                        #{/if}
+                                    #{/if}
+                                #{/if}
+                            #{/if}
+                            #{if sol.status.toString() == "REJEITADO"}
+                                <span class="badge-rejeitado">&#10060; REJEITADO</span>
+                            #{/if}
+                            #{if sol.status.toString() == "PENDENTE"}
+                                <span class="badge-pendente">&#8987; PENDENTE</span>
+                            #{/if}
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--pink-light); padding: 10px; border-radius: 10px; margin-top: 10px;">
+                        <small style="color: #666;">
+                            &#128197; <strong>Solicitado em:</strong> ${sol.dataSolicitacao.format('dd/MM/yyyy HH:mm')}
+                            #{if sol.dataResposta != null}
+                                <br>
+                                &#10004; <strong>Respondido em:</strong> ${sol.dataResposta.format('dd/MM/yyyy HH:mm')}
+                            #{/if}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    #{/list}
+
+    <div class="text-center mt-4">
+        <a href="@{Solicitacoes.listarPendentes()}" class="btn btn-pink">
+            &#128276; Ver Pendentes
+        </a>
+        <a href="@{Application.index}" class="btn btn-outline-pink">
+            &#127968; Voltar ao Inicio
+        </a>
+    </div>
+
+#{/if}
+#{else}
+    <div class="text-center py-5">
+        <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 50px; box-shadow: var(--shadow);">
+            <div style="font-size: 4rem; margin-bottom: 20px; opacity: 0.6;">&#128203;</div>
+            <h5>Nenhuma solicitacao registrada</h5>
+            <p class="text-muted">
+                Quando houver solicitacoes de acesso, elas aparecerao aqui.
+            </p>
+            <div class="mt-4">
+                <a href="@{Application.index}" class="btn btn-pink">
+                    &#127968; Voltar ao Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+#{/else}

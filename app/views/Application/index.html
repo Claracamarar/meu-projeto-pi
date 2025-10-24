@@ -1,0 +1,368 @@
+#{extends 'main.html' /}
+#{set title:'Clínica Dermatológica - Início' /}
+
+<style>
+    .hero-section {
+        background: var(--pink-gradient);
+        padding: 80px 0;
+        text-align: center;
+        color: white;
+        box-shadow: var(--shadow);
+        margin-bottom: 50px;
+        border-radius: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    .btn-hero {
+        background: white;
+        color: var(--pink-primary);
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 50px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out 0.6s both;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-hero:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        color: var(--pink-dark);
+        text-decoration: none;
+    }
+
+    .features-section {
+        padding: 60px 0;
+    }
+
+    .feature-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease;
+        height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        color: var(--pink-primary);
+        margin-bottom: 20px;
+    }
+
+    .quick-actions {
+        padding: 40px 0;
+    }
+
+    .action-card {
+        text-align: center;
+        padding: 30px;
+        height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(233, 30, 99, 0.2);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--pink-primary);
+        margin: 10px 0;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .decoration {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .decoration:nth-child(1) {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .decoration:nth-child(2) {
+        top: 20%;
+        right: 10%;
+        animation-delay: 2s;
+    }
+
+    .decoration:nth-child(3) {
+        bottom: 10%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .stat-card {
+            height: 120px;
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    
+    <div class="container">
+        <h1 class="hero-title">Seja bem-vindo à nossa Clínica Dermatológica!</h1>
+        <p class="hero-subtitle">Cuidando da sua pele com carinho, tecnologia e profissionalismo</p>
+        
+        #{if session.get("perfilUsuario") == "ADMINISTRADOR"}
+            <a href="@{Clientes.form()}" class="btn btn-hero">
+                📅 Cadastrar Novo Cliente
+            </a>
+        #{/if}
+        
+        #{if session.get("perfilUsuario") == "FUNCIONARIO"}
+            <a href="@{Clientes.form()}" class="btn btn-hero">
+                👥 Cadastrar Cliente
+            </a>
+        #{/if}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h4>Gestão de Clientes</h4>
+                    <p>Sistema completo para cadastro e acompanhamento de pacientes com histórico detalhado</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h4>Agendamento Fácil</h4>
+                    <p>Agende consultas de forma rápida e organizada com controle de datas</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h4>Cuidados Especializados</h4>
+                    <p>Tratamentos dermatológicos com profissionais qualificados e equipamentos modernos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Actions - Para ADMINISTRADOR e FUNCIONARIO -->
+#{if session.get("perfilUsuario") == "ADMINISTRADOR" || session.get("perfilUsuario") == "FUNCIONARIO"}
+<section class="quick-actions">
+    <div class="container">
+        <div class="row">
+			<div class="col-md-4 mb-3">
+			                <div class="card card-pink action-card">
+			                    <h5>👥 Gerenciar Clientes</h5>
+			                    <p>Visualizar e editar informações dos pacientes cadastrados</p>
+			                    <a href="@{Clientes.listar()}" class="btn btn-outline-pink">Acessar Lista</a>
+			                </div>
+			            </div>
+			            <div class="col-md-4 mb-3">
+			                <div class="card card-pink action-card">
+			                    <h5>➕ Novo Cliente</h5>
+			                    <p>Cadastrar um novo paciente no sistema</p>
+			                    <a href="@{Clientes.form()}" class="btn btn-outline-pink">Cadastrar</a>
+			                </div>
+			            </div>
+			            <div class="col-md-4 mb-3">
+			                <div class="card card-pink action-card">
+			                    <h5>🔍 Buscar Paciente</h5>
+			                    <p>Localizar rapidamente informações de pacientes</p>
+			                    <a href="@{Clientes.listar()}" class="btn btn-outline-pink">Pesquisar</a>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</section>
+			#{/if}
+			
+			<!-- Statistics Section - Painel de Controle apenas para ADMINISTRADOR -->
+			#{if session.get("perfilUsuario") == "ADMINISTRADOR"}
+			<section style="padding: 40px 0;">
+			    <div class="container">
+			        <div class="text-center mb-4">
+			            <h3 style="color: var(--pink-primary);">
+			                📊 Painel de Controle
+			            </h3>
+			        </div>
+			        
+			        <div class="row">
+			            <div class="col-md-3 mb-4" onclick="location.href='@{Clientes.listar}'" style="cursor: pointer;">
+			                <div class="stat-card">
+			                    <div class="stat-icon">👥</div>
+			                    <div class="stat-number">${clientesAtivos}</div>
+			                    <div class="stat-label">Clientes Ativos</div>
+			                </div>
+			            </div>
+			            
+			            <div class="col-md-3 mb-4">
+			                <div class="stat-card">
+			                    <div class="stat-icon">📅</div>
+			                    <div class="stat-number">${consultasHoje}</div>
+			                    <div class="stat-label">Consultas Hoje</div>
+			                </div>
+			            </div>
+			            
+			            <div class="col-md-3 mb-4">
+			                <div class="stat-card">
+			                    <div class="stat-icon">📆</div>
+			                    <div class="stat-number">${consultasSemana}</div>
+			                    <div class="stat-label">Consultas Semana</div>
+			                </div>
+			            </div>
+			            
+			            <div class="col-md-3 mb-4" onclick="location.href='@{Consultas.listar}'" style="cursor: pointer;">
+			                <div class="stat-card">
+			                    <div class="stat-icon">📋</div>
+			                    <div class="stat-number">${totalConsultas}</div>
+			                    <div class="stat-label">Total Consultas</div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</section>
+			#{/if}
+			
+			<!-- Área específica para FUNCIONARIO -->
+			#{if session.get("perfilUsuario") == "FUNCIONARIO"}
+			<section style="padding: 40px 0;">
+			    <div class="container">
+			        <div class="row justify-content-center">
+			            <div class="col-md-8">
+			                <div class="card card-pink p-5 text-center">
+			                    <div style="font-size: 4rem; margin-bottom: 20px;">💼</div>
+			                    <h3 style="color: var(--pink-primary); margin-bottom: 20px;">
+			                        Olá, ${session.get("nomeUsuario")}!
+			                    </h3>
+			                    <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+			                        Seja bem-vindo(a) ao sistema de gestão da clínica.<br>
+			                        Você tem acesso para cadastrar e gerenciar clientes.
+			                    </p>
+			                    
+			                    <div class="alert" style="background: rgba(33, 150, 243, 0.1); border: 2px solid #2196f3; border-radius: 15px; padding: 20px; margin-bottom: 30px;">
+			                        <h5 style="color: #1976d2; margin-bottom: 15px;">
+			                            💡 Suas Permissões
+			                        </h5>
+			                        <p style="color: #666; margin: 0; text-align: left;">
+			                            ✅ Cadastrar novos clientes<br>
+			                            ✅ Visualizar lista de clientes<br>
+			                            ✅ Editar informações de clientes<br>
+			                            ✅ Agendar consultas para clientes
+			                        </p>
+			                    </div>
+			                    
+			                    <div class="row">
+			                        <div class="col-md-6 mb-3">
+			                            <a href="@{Clientes.form()}" class="btn btn-pink btn-lg w-100">
+			                                ➕ Cadastrar Cliente
+			                            </a>
+			                        </div>
+			                        <div class="col-md-6 mb-3">
+			                            <a href="@{Clientes.listar()}" class="btn btn-outline-pink btn-lg w-100">
+			                                👥 Ver Clientes
+			                            </a>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			</section>
+			#{/if}

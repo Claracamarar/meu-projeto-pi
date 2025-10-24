@@ -1,0 +1,147 @@
+#{extends 'main.html' /}
+#{set title:'Listagem de Consultas' /}
+
+<div class="search-section">
+    <h3 style="color: var(--pink-primary); margin-bottom: 20px;">
+        📅 Consultas Agendadas
+    </h3>
+</div>
+
+<div class="table-container">
+    #{if consultas?.size() > 0}
+        <div class="row mb-3">
+            <div class="col-12">
+                <small class="text-muted">
+                    📊 Total de ${consultas.size()} consulta(s) agendada(s)
+                </small>
+            </div>
+        </div>
+        
+        <ul class="list-group">
+            #{list items: consultas, as:'consulta'}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="consulta-info">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="consulta-avatar me-3">
+                                <div style="width: 45px; height: 45px; background: var(--pink-gradient); 
+                                            border-radius: 50%; display: flex; align-items: center; 
+                                            justify-content: center; color: white; font-weight: bold;">
+                                    📅
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="color: var(--pink-dark);">
+                                    ${consulta.cliente.nomeCompleto}
+                                </strong>
+                                <span class="badge badge-consulta ms-2">
+                                    ${consulta.dataConsulta?.format('dd/MM/yyyy')}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="consulta-details">
+                            <small class="text-muted">
+                                📧 ${consulta.cliente.email} • 📱 ${consulta.cliente.telefone}
+                                • 📅 ${consulta.dataConsulta?.format('EEEE, dd/MM/yyyy')}
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="consulta-actions">
+                        <a href="@{Clientes.detalhar(consulta.cliente.id)}" 
+                           class="btn btn-outline-pink btn-sm" 
+                           title="Ver detalhes do cliente">
+                            👁️ Cliente
+                        </a>
+                        <a href="@{Clientes.editar(consulta.cliente.id)}" 
+                           class="btn btn-pink btn-sm" 
+                           title="Editar cliente">
+                            ✏️ Editar
+                        </a>
+                    </div>
+                </li>
+            #{/list}
+        </ul>
+    #{/if}
+    #{else}
+        <div class="text-center py-5">
+            <div style="opacity: 0.6;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">📅</div>
+                <h5>Nenhuma consulta agendada</h5>
+                <p class="text-muted">
+                    Que tal agendar a primeira consulta?
+                    <br>
+                    <a href="@{Clientes.listar}" class="btn btn-pink mt-2">
+                        👥 Ver Clientes
+                    </a>
+                </p>
+            </div>
+        </div>
+    #{/else}
+    
+    <div class="mt-4 text-center">
+        <a href="@{Clientes.listar}" class="btn btn-pink">
+            👥 Ver Clientes
+        </a>
+        <a href="@{Application.index}" class="btn btn-outline-pink">
+            🏠 Voltar ao Painel
+        </a>
+    </div>
+</div>
+
+<style>
+    .search-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1);
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .badge-consulta {
+        background: var(--pink-gradient);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+    }
+
+    .consulta-info {
+        flex: 1;
+    }
+    
+    .consulta-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .consulta-actions .btn {
+        white-space: nowrap;
+    }
+    
+    @media (max-width: 768px) {
+        .list-group-item {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        
+        .consulta-actions {
+            margin-top: 15px;
+            width: 100%;
+            justify-content: flex-start;
+        }
+        
+        .consulta-actions .btn {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+        }
+    }
+</style>

@@ -1,0 +1,81 @@
+#{extends 'main.html' /}
+#{set title:'Agendar Consulta' /}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card card-pink p-4 mb-4">
+            <div class="text-center mb-4">
+                <div style="width: 60px; height: 60px; background: var(--pink-gradient); 
+                            border-radius: 50%; display: inline-flex; align-items: center; 
+                            justify-content: center; color: white; font-size: 1.5rem;">
+                    📅
+                </div>
+                <h3 style="color: var(--pink-primary); margin-top: 15px;">
+                    Agendar Consulta
+                </h3>
+                <p class="text-muted">Para: <strong>${cliente.nomeCompleto}</strong></p>
+            </div>
+            
+            <form action="@{Consultas.salvar}" method="post">
+                <input type="hidden" name="clienteId" value="${cliente.id}" />
+                
+                <div class="mb-4">
+                    <div class="client-info-card">
+                        <div class="d-flex align-items-center">
+                            <div style="width: 40px; height: 40px; background: var(--pink-gradient); 
+                                        border-radius: 50%; display: flex; align-items: center; 
+                                        justify-content: center; color: white; font-weight: bold; margin-right: 15px;">
+                                ${cliente.nomeCompleto?.charAt(0)?.toUpperCase()}
+                            </div>
+                            <div>
+                                <strong style="color: var(--pink-dark);">${cliente.nomeCompleto}</strong>
+                                <br>
+                                <small class="text-muted">📧 ${cliente.email} • 📱 ${cliente.telefone}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">
+                        <strong>📅 Data da Consulta:</strong>
+                    </label>
+                    <input type="date" name="dataConsulta" 
+                           class="form-control form-control-pink" 
+                           min="${new Date().format('yyyy-MM-dd')}"
+                           required />
+                    <small class="text-muted">Selecione uma data a partir de hoje</small>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-pink btn-lg">
+                        ✅ Confirmar Consulta
+                    </button>
+                    <a href="@{Clientes.detalhar(cliente.id)}" class="btn btn-secondary btn-lg">
+                        ❌ Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card card-pink p-3">
+            <h6 style="color: var(--pink-primary); text-align: center; margin-bottom: 15px;">
+                💡 Informações Importantes
+            </h6>
+            <ul style="font-size: 0.9rem; color: #666;">
+                <li>As consultas devem ser agendadas com antecedência</li>
+                <li>Em caso de cancelamento, avisar com 24h de antecedência</li>
+                <li>Trazer documentos e exames anteriores</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    .client-info-card {
+        background: rgba(233, 30, 99, 0.05);
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid var(--pink-medium);
+    }
+</style>
