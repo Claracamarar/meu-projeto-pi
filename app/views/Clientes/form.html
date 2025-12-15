@@ -13,8 +13,44 @@
                 #{/else}
             </h3>
             
-            <form action="@{Clientes.salvar}" method="post">
+            <form action="@{Clientes.salvar}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="cliente.id" value="${cliente?.id}" />
+                
+                <!-- Preview da Foto -->
+                <div class="text-center mb-4">
+                    <div class="foto-preview-container">
+                        #{if cliente?.foto?.exists()}
+                            <img id="fotoPreview" src="@{Clientes.foto(cliente.id)}" alt="Foto de perfil" class="foto-preview" />
+                        #{/if}
+                        #{else}
+                            <img id="fotoPreview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23f8bbd9' width='150' height='150'/%3E%3Ctext fill='%23e91e63' font-family='Arial' font-size='60' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3E📷%3C/text%3E%3C/svg%3E" alt="Sem foto" class="foto-preview" />
+                        #{/else}
+                    </div>
+                </div>
+                
+                <!-- Upload de Foto -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>📷 Foto de Perfil:</strong>
+                    </label>
+                    <input type="file" 
+                           id="fotoInput" 
+                           name="foto" 
+                           class="form-control form-control-pink" 
+                           accept="image/*"
+                           onchange="previewFoto(this)" />
+                    <small class="text-muted">Formatos aceitos: JPG, PNG, GIF (máx. 5MB)</small>
+                </div>
+                
+                #{if cliente?.foto?.exists()}
+                    <div class="mb-3 text-center">
+                        <button type="button" 
+                                class="btn btn-outline-danger btn-sm" 
+                                onclick="removerFotoCliente(${cliente.id})">
+                            🗑️ Remover Foto Atual
+                        </button>
+                    </div>
+                #{/if}
                 
                 <div class="mb-3">
                     <label class="form-label">
@@ -25,6 +61,22 @@
                            class="form-control form-control-pink" 
                            placeholder="Digite o nome completo do paciente"
                            required />
+                </div>
+                
+                <!-- CAMPO CPF COM MÁSCARA E VALIDAÇÃO -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>🆔 CPF:</strong>
+                    </label>
+                    <input type="text" 
+                           id="cpfInput"
+                           name="cliente.cpf" 
+                           value="${cliente?.cpf?.replaceAll('(\\d{3})(\\d{3})(\\d{3})(\\d{2})', '$1.$2.$3-$4')}" 
+                           class="form-control form-control-pink" 
+                           placeholder="000.000.000-00"
+                           maxlength="14"
+                           required />
+                    <small id="cpfFeedback" class="text-muted">Digite apenas números</small>
                 </div>
                 
                 <div class="mb-3">
@@ -78,3 +130,148 @@
         #{/if}
     </div>
 </div>
+
+<style>
+    .foto-preview-container {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid var(--pink-primary);
+        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        background: #f8f9fa;
+    }
+    
+    .foto-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .cpf-valido {
+        border-color: #28a745 !important;
+    }
+    
+    .cpf-invalido {
+        border-color: #dc3545 !important;
+    }
+</style>
+
+<script>
+// Preview da foto antes de enviar
+function previewFoto(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            $('#fotoPreview').attr('src', e.target.result);
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Máscara de CPF
+$('#cpfInput').on('input', function() {
+    var cpf = $(this).val().replace(/\D/g, ''); // Remove tudo que não é número
+    
+    // Aplica a máscara
+    if (cpf.length <= 11) {
+        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+        cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    }
+    
+    $(this).val(cpf);
+    
+    // Valida CPF em tempo real
+    var cpfLimpo = cpf.replace(/\D/g, '');
+    if (cpfLimpo.length === 11) {
+        if (validarCPF(cpfLimpo)) {
+            $(this).removeClass('cpf-invalido').addClass('cpf-valido');
+            $('#cpfFeedback').removeClass('text-danger').addClass('text-success').text('✓ CPF válido');
+            
+            // Verifica se CPF já existe via AJAX
+            verificarCPFExistente(cpfLimpo);
+        } else {
+            $(this).removeClass('cpf-valido').addClass('cpf-invalido');
+            $('#cpfFeedback').removeClass('text-success').addClass('text-danger').text('✗ CPF inválido');
+        }
+    } else {
+        $(this).removeClass('cpf-valido cpf-invalido');
+        $('#cpfFeedback').removeClass('text-success text-danger').text('Digite apenas números');
+    }
+});
+
+// Função de validação de CPF
+function validarCPF(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+    
+    if (cpf.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+    
+    var soma = 0;
+    for (var i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    var resto = 11 - (soma % 11);
+    var digito1 = (resto === 10 || resto === 11) ? 0 : resto;
+    
+    if (digito1 !== parseInt(cpf.charAt(9))) return false;
+    
+    soma = 0;
+    for (var i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    resto = 11 - (soma % 11);
+    var digito2 = (resto === 10 || resto === 11) ? 0 : resto;
+    
+    return digito2 === parseInt(cpf.charAt(10));
+}
+
+// Verifica se CPF já existe no sistema utilizando AJAX
+function verificarCPFExistente(cpf) {
+    var clienteId = $('input[name="cliente.id"]').val();
+    
+    $.ajax({
+        type: 'GET',
+        url: '@{Clientes.verificarCPF()}',
+        data: { 
+            cpf: cpf,
+            id: clienteId || 0
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.existe) {
+                $('#cpfInput').removeClass('cpf-valido').addClass('cpf-invalido');
+                $('#cpfFeedback').removeClass('text-success').addClass('text-danger').text('✗ CPF já cadastrado no sistema!');
+            }
+        }
+    });
+}
+
+// Remover foto utilizando AJAX
+function removerFotoCliente(clienteId) {
+    if (confirm('Tem certeza que deseja remover a foto deste cliente?')) {
+        $.ajax({
+            type: 'POST',
+            url: '@{Clientes.removerFoto()}',
+            data: { id: clienteId },
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    alert(data.message);
+                    $('#fotoPreview').attr('src', "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23f8bbd9' width='150' height='150'/%3E%3Ctext fill='%23e91e63' font-family='Arial' font-size='60' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3E📷%3C/text%3E%3C/svg%3E");
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function() {
+                alert('Erro ao remover foto!');
+            }
+        });
+    }
+}
+</script>

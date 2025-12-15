@@ -10,11 +10,11 @@
         <div class="col-md-8">
             <input type="text" name="termo" value="${termo}" 
                    class="form-control form-control-pink" 
-                   placeholder="🔍 Buscar por nome ou email">
+                   placeholder="🔍 Buscar por nome, email ou CPF">
         </div>
         <div class="col-md-4">
             <button type="submit" class="btn btn-pink">
-                🔍 Buscar
+                🔎 Buscar
             </button>
             <a href="@{Clientes.form}" class="btn btn-pink">
                 ➕ Novo Cliente
@@ -43,11 +43,16 @@
                 <div class="client-info">
                     <div class="d-flex align-items-center mb-2">
                         <div class="client-avatar me-3">
-                            <div style="width: 45px; height: 45px; background: var(--pink-gradient); 
-                                        border-radius: 50%; display: flex; align-items: center; 
-                                        justify-content: center; color: white; font-weight: bold;">
-                                ${c.nomeCompleto?.charAt(0)?.toUpperCase()}
-                            </div>
+                            #{if c.foto?.exists()}
+                                <img src="@{Clientes.foto(c.id)}" alt="${c.nomeCompleto}" class="avatar-img" />
+                            #{/if}
+                            #{else}
+                                <div style="width: 45px; height: 45px; background: var(--pink-gradient); 
+                                            border-radius: 50%; display: flex; align-items: center; 
+                                            justify-content: center; color: white; font-weight: bold;">
+                                    ${c.nomeCompleto?.charAt(0)?.toUpperCase()}
+                                </div>
+                            #{/else}
                         </div>
                         <div>
                             <strong style="color: var(--pink-dark);">${c.nomeCompleto}</strong>
@@ -56,7 +61,9 @@
                     </div>
                     <div class="client-details">
                         <small class="text-muted">
-                            📧 ${c.email} • 📱 ${c.telefone}
+                            🆔 CPF: ${c.cpf?.replaceAll('(\\d{3})(\\d{3})(\\d{3})(\\d{2})', '$1.$2.$3-$4')}
+                            • 📧 ${c.email} 
+                            • 📱 ${c.telefone}
                             #{if c.consultas?.size() > 0}
                                 • 📅 ${c.consultas.size()} consulta(s) agendada(s)
                             #{/if}
@@ -164,6 +171,14 @@
     
     .client-actions .btn {
         white-space: nowrap;
+    }
+    
+    .avatar-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--pink-primary);
     }
     
     @media (max-width: 768px) {

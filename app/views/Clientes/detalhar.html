@@ -1,16 +1,22 @@
 #{extends 'main.html' /}
 #{set title:'Detalhamento do Cliente' /}
 
-
 <div class="row justify-content-center">
     <div class="col-lg-8">
         <div class="card card-pink p-4 mb-4">
             <div class="text-center mb-4">
-                <div style="width: 80px; height: 80px; background: var(--pink-gradient); 
-                            border-radius: 50%; display: inline-flex; align-items: center; 
-                            justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
-                    ${cliente.nomeCompleto?.charAt(0)?.toUpperCase()}
-                </div>
+                #{if cliente?.foto?.exists()}
+                    <img src="@{Clientes.foto(cliente.id)}" 
+                         alt="${cliente.nomeCompleto}" 
+                         class="profile-photo" />
+                #{/if}
+                #{else}
+                    <div style="width: 80px; height: 80px; background: var(--pink-gradient); 
+                                border-radius: 50%; display: inline-flex; align-items: center; 
+                                justify-content: center; color: white; font-size: 2rem; font-weight: bold;">
+                        ${cliente.nomeCompleto?.charAt(0)?.toUpperCase()}
+                    </div>
+                #{/else}
                 <h3 style="color: var(--pink-primary); margin-top: 15px;">
                     Detalhes do Cliente
                 </h3>
@@ -25,6 +31,12 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <div class="info-card">
+                        <strong style="color: var(--pink-dark);">🆔 CPF:</strong>
+                        <p class="mt-1">${cliente.cpf?.replaceAll('(\\d{3})(\\d{3})(\\d{3})(\\d{2})', '$1.$2.$3-$4')}</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="info-card">
                         <strong style="color: var(--pink-dark);">📧 Email:</strong>
                         <p class="mt-1">${cliente.email}</p>
                     </div>
@@ -35,7 +47,7 @@
                         <p class="mt-1">${cliente.telefone}</p>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-12 mb-3">
                     <div class="info-card">
                         <strong style="color: var(--pink-dark);">📊 Status:</strong>
                         <p class="mt-1">
@@ -102,11 +114,25 @@
 </div>
 
 <style>
+    .profile-photo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--pink-primary);
+        box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    }
+    
     .info-card {
         background: rgba(233, 30, 99, 0.05);
         padding: 15px;
         border-radius: 10px;
         border-left: 4px solid var(--pink-primary);
+    }
+    
+    .info-card p {
+        margin: 0;
+        color: #333;
     }
     
     .consultas-list {
@@ -139,5 +165,13 @@
         background: rgba(255, 255, 255, 0.5);
         border-radius: 15px;
         border: 2px dashed var(--pink-medium);
+    }
+    
+    .badge-ativo {
+        background: var(--pink-gradient);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85rem;
     }
 </style>
